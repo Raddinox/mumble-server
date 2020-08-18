@@ -1,0 +1,58 @@
+version: '2.0'
+
+networks:
+  mumble-net:
+
+volumes:
+  mumble_ice:
+
+services:
+  mumble-srv:
+    build: murmur/.
+    container_name: murmur
+    restart: unless-stopped
+    ports:
+      - 64738:64738
+#      - 6502:6502
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /srv/mumble/murmur:/opt/mumble/cfg
+      - mumble_ice:/opt/mumble/ice/
+    networks:
+      - mumble-net
+  mumble-admin:
+    build: mumble-django/.
+    container_name: mumble-django
+    restart: unless-stopped
+    depends_on:
+      - mumble-srv
+    ports:
+      - 9000:9000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /srv/mumble/murmur:/mumble
+      - /srv/mumble/mumble-django:/opt/mumble-django/db
+      - mumble_ice:/opt/mumble/ice
+    environment:
+      - MURMUR_CONNSTR=Meta:tcp -h murmur -p 6502
+      - MURMUR_ICESECRET=''
+    networks:
+      - mumble-net
+  mumble-web:
+#    build: https://github.com/Raddinox/mumble-web.git
+    build: https://git.raddinox.com/forks/mumble-web.git#new-theme
+    container_name: mumble-web
+    restart: unless-stopped
+    depends_on:
+      - mumble-srv
+    ports:
+      - 8080:8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /srv/mumble/mumble-web/config.local.js:/home/node/app/config.local.js
+      - /srv/mumble/mumble-web/config.local.js:/home/node/dist/config.local.js
+    environment:
+      - MUMBLE_SERVER=murmur:64738
+    networks:
+      - mumble-net
+

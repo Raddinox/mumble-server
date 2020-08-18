@@ -1,0 +1,11 @@
+diff -ruN mumble-django/pyweb/mumble/MumbleCtlIce.py mumble-django.new/pyweb/mumble/MumbleCtlIce.py
+--- mumble-django/pyweb/mumble/MumbleCtlIce.py	2020-08-14 19:42:55.375078615 +0200
++++ mumble-django.new/pyweb/mumble/MumbleCtlIce.py	2020-08-14 19:50:04.321710768 +0200
+@@ -94,6 +94,7 @@
+     prop = Ice.createProperties([])
+     prop.setProperty("Ice.ImplicitContext", "Shared")
+     prop.setProperty("Ice.MessageSizeMax",  "65535")
++    prop.setProperty("Ice.Default.EncodingVersion", "1.0")
+ 
+     idd = Ice.InitializationData()
+     idd.properties = prop
