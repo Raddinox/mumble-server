@@ -39,8 +39,7 @@ services:
     networks:
       - mumble-net
   mumble-web:
-#    build: https://github.com/Raddinox/mumble-web.git
-    build: https://git.raddinox.com/forks/mumble-web.git#new-theme
+    build: https://github.com/Raddinox/mumble-web.git
     container_name: mumble-web
     restart: unless-stopped
     depends_on:
